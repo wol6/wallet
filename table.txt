@@ -1,0 +1,94 @@
+-- =========================
+-- DEPARTMENTS TABLE
+-- =========================
+
+CREATE TABLE departments (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+-- =========================
+-- USERS TABLE
+-- =========================
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+
+    department_id INTEGER NOT NULL,
+    isadmin BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_users_department
+        FOREIGN KEY (department_id)
+        REFERENCES departments(id)
+        ON DELETE CASCADE
+);
+
+
+
+-- =========================
+-- WALLETS TABLE
+-- =========================
+
+CREATE TABLE wallets (
+    id SERIAL PRIMARY KEY,
+
+    department_id INTEGER NOT NULL UNIQUE,
+
+    balance NUMERIC(12,2) NOT NULL DEFAULT 0.00,
+
+    currency VARCHAR(10) NOT NULL DEFAULT 'INR',
+
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_wallet_department
+        FOREIGN KEY (department_id)
+        REFERENCES departments(id)
+        ON DELETE CASCADE
+);
+
+
+
+-- =========================
+-- TRANSACTIONS TABLE
+-- =========================
+
+CREATE TABLE transactions (
+    id SERIAL PRIMARY KEY,
+
+    wallet_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+
+    amount NUMERIC(12,2) NOT NULL CHECK (amount > 0),
+
+    type VARCHAR(20) NOT NULL
+        CHECK (type IN ('debit', 'credit')),
+
+    status VARCHAR(20) NOT NULL
+        CHECK (status IN ('success', 'failed', 'pending')),
+
+    reference_id VARCHAR(100) NOT NULL UNIQUE,
+
+    description TEXT,
+
+    balance_before NUMERIC(12,2) NOT NULL,
+    balance_after NUMERIC(12,2) NOT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_transaction_wallet
+        FOREIGN KEY (wallet_id)
+        REFERENCES wallets(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_transaction_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE
+);
