@@ -1,16 +1,18 @@
 import axios from 'axios'
 import React, { useState } from 'react'
+import { useParams } from 'react-router-dom'
 
-function Invoice({deptId}) {
+function Invoice({deptId,refreshBal,refreshTrHis}) {
 
     const [loadingId, setLoadingId] = useState(null)
+    const {id} = useParams()
 
     // Demo Invoice Data
     const invoices = [
         {
             id: 1,
             vendor: 'Amazon Web Services',
-            refid: 'INV-AWS-1001',
+            refid: 'INV-AWS-1006',
             amount: 500,
             deptid: 1,
             userid: 2,
@@ -56,7 +58,7 @@ function Invoice({deptId}) {
             const body = {
                 amt: invoice.amount,
                 deptid: deptId,
-                userid: 2,
+                userid: id,
                 refid: invoice.refid,
                 descp: invoice.vendor
             }
@@ -67,7 +69,9 @@ function Invoice({deptId}) {
             )
 
             console.log(data)
-
+            if(refreshBal) refreshBal()
+            if(refreshTrHis) refreshTrHis()
+            
             alert(data.msg)
 
         } catch (err) {

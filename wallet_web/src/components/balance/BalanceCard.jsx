@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
-function BalanceCard({deptId}) {
+function BalanceCard({deptId,setRefreshBal}) {
     const [balance, setBalance] = useState(null)
     async function fetchBal() {
         try {
@@ -19,6 +19,8 @@ function BalanceCard({deptId}) {
     }
     useEffect(() => {
         fetchBal()
+
+        setRefreshBal(()=>fetchBal)
     }, [])
     return (
         <>

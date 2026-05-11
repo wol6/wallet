@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
-function TransactionList({deptId}) {
+function TransactionList({deptId,setRefreshTrHis}) {
 
     const [list, setList] = useState([])
 
@@ -26,6 +26,8 @@ function TransactionList({deptId}) {
 
     useEffect(() => {
         fetchTransList()
+
+        setRefreshTrHis(()=>fetchTransList)
     }, [])
 
 

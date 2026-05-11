@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import BalanceCard from './balance/BalanceCard';
 import Invoice from './invoice/Invoice';
 import TransactionList from './transhistory/TransactionList';
 
 function Dashboard({deptId}) {
 
+      const [refreshBal, setRefreshBal] = useState(null);
+      const [refreshTrHis, setRefreshTrHis] = useState(null);
     const deptObj = {
         1:"Finance",
         2:"HR",
@@ -28,7 +30,7 @@ function Dashboard({deptId}) {
 
 
             {/* Balance Card */}
-            <BalanceCard deptId={deptId}/>
+            <BalanceCard deptId={deptId} setRefreshBal={setRefreshBal}/>
 
 
             {/* Main Grid */}
@@ -36,10 +38,10 @@ function Dashboard({deptId}) {
 
 
                 {/* Payment Section */}
-                <Invoice deptId={deptId} />
+                <Invoice deptId={deptId} refreshBal={refreshBal} refreshTrHis={refreshTrHis}/>
 
                 {/* Transactions Section */}
-                <TransactionList deptId={deptId}/>
+                <TransactionList deptId={deptId} setRefreshTrHis={setRefreshTrHis}/>
 
             </div>
 
