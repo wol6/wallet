@@ -7,6 +7,7 @@ function LoginPage() {
         email: "",
         password: "",
     });
+    const [loading,setLoading] = useState(false)
     const navigate = useNavigate()
 
     function handleChange(e) {
@@ -20,6 +21,7 @@ function LoginPage() {
         e.preventDefault();
 
         try {
+            setLoading(true)
             const { data: resp } = await axios.post("http://localhost:5000/login", {
                 formData
             })
@@ -29,9 +31,12 @@ function LoginPage() {
                 const id = userDetails.id
                 localStorage.setItem('user', JSON.stringify(userDetails))
                 navigate(`/dept/${id}`)
+                setLoading(false)
             }
         } catch (e) {
             console.log(e)
+        }finally{
+            setLoading(false)
         }
     }
 
@@ -89,9 +94,9 @@ function LoginPage() {
                     {/* Button */}
                     <button
                         type="submit"
-                        className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
+                        className="w-full bg-blue-500 cursor-pointer text-white py-2 rounded-lg hover:bg-blue-600 transition"
                     >
-                        Login
+                        {loading?".....":"Login"}
                     </button>
                 </form>
             </div>

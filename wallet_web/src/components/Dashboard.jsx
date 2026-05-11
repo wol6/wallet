@@ -5,13 +5,20 @@ import TransactionList from './transhistory/TransactionList';
 
 function Dashboard({deptId}) {
 
+    const deptObj = {
+        1:"Finance",
+        2:"HR",
+        3:"Operations",
+        4:"Marketing"
+    }
+
     return (
         <div className="min-h-screen bg-gray-100 p-6">
 
             {/* Header */}
             <div className="mb-6">
                 <h1 className="text-3xl font-bold text-gray-800">
-                    Department Expense Wallet
+                  {deptObj[deptId]}  Department Expense 
                 </h1>
 
                 <p className="text-gray-500 mt-1">

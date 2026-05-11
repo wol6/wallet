@@ -16,7 +16,7 @@ function Home() {
 
   function handleLogout(){
     localStorage.clear()
-    navigate('/login')
+    navigate('/')
   }
 
   return (
