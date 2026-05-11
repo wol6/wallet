@@ -92,3 +92,30 @@ CREATE TABLE transactions (
         REFERENCES users(id)
         ON DELETE CASCADE
 );
+
+---------------------------------------------
+
+CREATE TABLE invoices (
+
+    id SERIAL PRIMARY KEY,
+
+    name VARCHAR(150) NOT NULL,
+
+    refid VARCHAR(100) NOT NULL UNIQUE,
+
+    amount NUMERIC(12,2) NOT NULL
+        CHECK (amount > 0),
+
+    depid INTEGER NOT NULL,
+
+    descp TEXT,
+
+    paid BOOLEAN DEFAULT FALSE,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_invoice_department
+        FOREIGN KEY (depid)
+        REFERENCES departments(id)
+        ON DELETE CASCADE
+);
