@@ -124,6 +124,11 @@ export const addTrans = async (req, res) => {
             ]
         );
 
+        await pool.query(`
+           UPDATE invoices
+            SET paid = true
+            WHERE refid = $1; 
+             `,[refid])
 
         // COMMIT
         await client.query("COMMIT");

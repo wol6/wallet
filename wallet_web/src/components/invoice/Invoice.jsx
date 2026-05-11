@@ -1,52 +1,65 @@
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 function Invoice({deptId,refreshBal,refreshTrHis}) {
 
+    const [invoices,setInvoices] = useState([])
     const [loadingId, setLoadingId] = useState(null)
     const {id} = useParams()
 
     // Demo Invoice Data
-    const invoices = [
-        {
-            id: 1,
-            vendor: 'Amazon Web Services',
-            refid: 'INV-AWS-1006',
-            amount: 500,
-            deptid: 1,
-            userid: 2,
-            descp: 'Cloud infrastructure payment'
-        },
-        {
-            id: 2,
-            vendor: 'Razorpay Services',
-            refid: 'INV-RZP-1002',
-            amount: 1500,
-            deptid: 1,
-            userid: 2,
-            descp: 'Payment gateway charges'
-        },
-        {
-            id: 3,
-            vendor: 'Zoho Corporation',
-            refid: 'INV-ZOHO-1003',
-            amount: 700,
-            deptid: 1,
-            userid: 2,
-            descp: 'CRM subscription renewal'
-        },
-        {
-            id: 4,
-            vendor: 'Slack Technologies',
-            refid: 'INV-SLK-1004',
-            amount: 2000,
-            deptid: 1,
-            userid: 2,
-            descp: 'Team communication subscription'
-        }
-    ]
+    // const invoices = [
+    //     {
+    //         id: 1,
+    //         vendor: 'Amazon Web Services',
+    //         refid: 'INV-AWS-1006',
+    //         amount: 500,
+    //         deptid: 1,
+    //         userid: 2,
+    //         descp: 'Cloud infrastructure payment'
+    //     },
+    //     {
+    //         id: 2,
+    //         vendor: 'Razorpay Services',
+    //         refid: 'INV-RZP-1002',
+    //         amount: 1500,
+    //         deptid: 1,
+    //         userid: 2,
+    //         descp: 'Payment gateway charges'
+    //     },
+    //     {
+    //         id: 3,
+    //         vendor: 'Zoho Corporation',
+    //         refid: 'INV-ZOHO-1003',
+    //         amount: 700,
+    //         deptid: 1,
+    //         userid: 2,
+    //         descp: 'CRM subscription renewal'
+    //     },
+    //     {
+    //         id: 4,
+    //         vendor: 'Slack Technologies',
+    //         refid: 'INV-SLK-1004',
+    //         amount: 2000,
+    //         deptid: 1,
+    //         userid: 2,
+    //         descp: 'Team communication subscription'
+    //     }
+    // ]
 
+    async function fetchInvoices() {
+        try{
+            const {data:resp} = await axios.get('http://localhost:5000/show-invoices',{
+                params:{depid:deptId}
+            })
+            if(resp.success){
+                setInvoices(resp.invoices)
+            }
+        }catch(e){
+            console.log(e)
+        }
+    }
 
     // Handle Payment
     async function handlePay(invoice) {
@@ -71,6 +84,7 @@ function Invoice({deptId,refreshBal,refreshTrHis}) {
             console.log(data)
             if(refreshBal) refreshBal()
             if(refreshTrHis) refreshTrHis()
+            fetchInvoices()
             
             alert(data.msg)
 
@@ -89,6 +103,9 @@ function Invoice({deptId,refreshBal,refreshTrHis}) {
         }
     }
 
+    useEffect(()=>{
+        fetchInvoices()
+    },[])
 
     return (
 
